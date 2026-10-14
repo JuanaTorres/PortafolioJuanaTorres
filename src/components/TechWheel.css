@@ -1,0 +1,106 @@
+/* The wheel sizes itself to the column it sits in (container query units). */
+.tech-wheel-container {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.tech-wheel {
+  --wheel-size: min(360px, 100cqi);
+  --logo-size: calc(var(--wheel-size) * 0.19);
+  --spin-duration: 30s;
+  position: relative;
+  width: var(--wheel-size);
+  aspect-ratio: 1;
+  margin-inline: auto;
+}
+
+/* Dashed orbit drawn behind the logos */
+.tech-wheel::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--logo-size) / 2);
+  border-radius: 50%;
+  border: 2px dashed var(--color-accent-soft);
+  opacity: 0.7;
+}
+
+.tech-wheel-hub {
+  position: absolute;
+  inset: 32%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, var(--color-accent-soft), var(--color-tag-bg) 75%);
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: calc(var(--wheel-size) * 0.08);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.tech-wheel-ring {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  animation: tech-wheel-spin var(--spin-duration) linear infinite;
+}
+
+.tech-wheel:hover .tech-wheel-ring,
+.tech-wheel:hover .tech-wheel-logo {
+  animation-play-state: paused;
+}
+
+.tech-wheel-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--logo-size);
+  height: var(--logo-size);
+  margin: calc(var(--logo-size) / -2);
+  transform: rotate(var(--angle))
+    translateY(calc((var(--wheel-size) - var(--logo-size)) / -2))
+    rotate(calc(-1 * var(--angle)));
+}
+
+/* Counter-rotation keeps every logo upright while the ring spins. */
+.tech-wheel-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 18%;
+  border-radius: 50%;
+  /* Light chip in both themes so dark logos (e.g. GitHub) stay visible. */
+  background-color: #fdfaf3;
+  border: 2px solid var(--color-accent-soft);
+  box-shadow: var(--shadow-card);
+  animation: tech-wheel-spin var(--spin-duration) linear infinite reverse;
+  transition: transform var(--transition-fast);
+}
+
+.tech-wheel-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@keyframes tech-wheel-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* The wheel is a slow, continuous rotation and is meant to keep turning even
+   when the global prefers-reduced-motion rule (index.css) stops animations.
+   Class selectors outrank that rule's `*` selector. */
+@media (prefers-reduced-motion: reduce) {
+  .tech-wheel-ring,
+  .tech-wheel-logo {
+    animation-duration: var(--spin-duration) !important;
+    animation-iteration-count: infinite !important;
+  }
+}

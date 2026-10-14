@@ -1,0 +1,112 @@
+.project-card {
+  list-style: none;
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition-med), box-shadow var(--transition-med),
+    border-color var(--transition-med);
+  display: flex;
+  flex-direction: column;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--color-accent);
+}
+
+.project-image {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background-color: var(--color-tag-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Animated preview shown on hover/focus, layered over the static image. */
+.project-gif {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--transition-med);
+}
+
+.project-image.is-playing .project-gif {
+  opacity: 1;
+}
+
+.project-gif-badge {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background-color: var(--color-bg-elevated);
+  color: var(--color-accent);
+  transition: opacity var(--transition-fast);
+}
+
+.project-image.is-playing .project-gif-badge {
+  opacity: 0;
+}
+
+.project-image-placeholder {
+  font-size: 1.75rem;
+  color: var(--color-tag-text);
+}
+
+.project-body {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+}
+
+.project-title {
+  font-size: 1.15rem;
+}
+
+.project-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.project-tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: var(--space-1) 0 var(--space-2);
+  padding: 0;
+}
+
+.project-tag {
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background-color: var(--color-tag-bg);
+  color: var(--color-tag-text);
+}
+
+.project-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+}
