@@ -59,7 +59,7 @@ export default function Contact() {
 
     setStatus("sending");
     try {
-      await sendContactForm(event,form.current);
+      await sendContactForm(form.current);
       markMessageSent();
       setStatus("success");
       setFormData(INITIAL_FORM);

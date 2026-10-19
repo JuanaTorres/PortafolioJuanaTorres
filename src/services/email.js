@@ -41,24 +41,29 @@ export function getEmailConfig(env = import.meta.env) {
 
 /**
  * @param {HTMLFormElement} formElement - the form (e.g. `form.current` from a ref).
+ *   The caller is responsible for `event.preventDefault()`.
  * @param {{ config?: object|null, client?: typeof emailjs }} [options]
  */
-export async function sendContactForm(e,
+export async function sendContactForm(
   formElement,
   { config = getEmailConfig(), client = emailjs } = {}
 ) {
-  if (!config) throw new EmailServiceError("not-configured");
+  if (!config) {
+    console.error("[EmailJS] Faltan VITE_EMAILJS_SERVICE_ID / TEMPLATE_ID / PUBLIC_KEY en el build.");
+    throw new EmailServiceError("not-configured");
+  }
 
   const { serviceId, templateId, publicKey } = config;
-  client.init({
-  publicKey: publicKey,
-});
-console.log(formElement)
 
   try {
-    e.preventDefault();
-    await client.sendForm(serviceId, templateId, formElement);
+    await client.sendForm(serviceId, templateId, formElement, {
+      publicKey,
+      blockHeadless: true,
+    });
   } catch (error) {
-console.log(error);    throw new EmailServiceError(error?.status ? `http-${error.status}` : "network", error);
+    // EmailJS rejects with { status, text } (e.g. 412 "Gmail_API: Invalid grant").
+    // Logged for debugging; the UI only shows a generic, translated message.
+    console.error("[EmailJS] Error al enviar:", error?.status ?? "", error?.text ?? error);
+    throw new EmailServiceError(error?.status ? `http-${error.status}` : "network", error);
   }
 }
